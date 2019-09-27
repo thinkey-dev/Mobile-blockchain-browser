@@ -1,6 +1,4 @@
-# demo
-
-> A Vue.js project
+# Mobile-blockchain-browser
 
 ## Build Setup
 
