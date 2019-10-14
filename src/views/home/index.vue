@@ -18,21 +18,19 @@
     <user-info ref="userIn" v-show="is_show[0].is_true"/>
     <migration-list v-show="is_show[1].is_true"/>
     <data-statistics v-show="is_show[2].is_true"/>
-    <!--<numerical-setting v-show="is_show[3].is_true"/>-->
-    <!--<account-information v-show="is_show[4].is_true"/>-->
-    <!--<service-monitoring v-show="is_show[5].is_true"/>-->
+    <node-upgrade v-show="is_show[3].is_true"/>
+    <service-monitoring v-show="is_show[4].is_true"/>
   </div>
 </template>
 <script>
   import userInfo from '../../components/userInfo'
   import migrationList from '../../components/migrationList'
   import dataStatistics from '../../components/dataStatistics'
-  // import rechargeRecord from '../../components/rechargeRecord'
-  // import withdrawalsRecord from '../../components/withdrawalsRecord'
-  // import serviceMonitoring from './index'
+  import nodeUpgrade from '../../components/nodeUpgrade'
+  import serviceMonitoring from '../../components/serviceMonitoring'
   export default {
     name: "index",
-    components: {userInfo,migrationList,dataStatistics},
+    components: {userInfo,migrationList,dataStatistics,nodeUpgrade,serviceMonitoring},
     data(){
       return{
         is_show:[

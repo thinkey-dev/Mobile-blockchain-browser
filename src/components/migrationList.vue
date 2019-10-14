@@ -133,6 +133,18 @@
       currentPageChange(e) {
 
       },
+      /*是否迁移成功*/
+      whether_to_migrate(e) {
+        let istrue = ''
+        if (e == 0) {
+          istrue = '否'
+        } else if (e == 1) {
+          istrue = '是'
+        } else {
+          istrue = ''
+        }
+        return istrue
+      }
     }
   }
 </script>

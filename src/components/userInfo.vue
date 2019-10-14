@@ -1,5 +1,46 @@
 <template>
   <div class="wr_all">
+    <el-dialog
+      title="累计收益详细"
+      :visible.sync="historical_details"
+      width="40%"
+    >
+      <div class="block">
+        <div class="con_table">
+          <el-table
+            :data="historical_data"
+            border
+            style="width: 100%;"
+            :header-cell-style="this.tableHeaderColor">
+            <el-table-column
+              label="时间"
+              align="center">
+              <template slot-scope="scope">
+                <span>{{timestampToTime(scope.row.timestamp)}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="数值"
+              align="center">
+              <template slot-scope="scope">
+                <span>{{scope.row.address}}</span>
+              </template>
+            </el-table-column>
+
+          </el-table>
+          <el-pagination
+            background
+            @current-change="change_currentPage_1"
+            :current-page="currentPage_1"
+            :page-size="pagesize_1"
+            layout="total,prev, pager, next"
+            :total="totla_1"
+          >
+          </el-pagination>
+        </div>
+      </div>
+
+    </el-dialog>
     <div class="con_search">
       <div class="con_search_div">
         <span class="el-icon-search us_search2_1_input_icon"></span>
@@ -85,7 +126,7 @@
           align="center">
           <template slot-scope="scope">
             <span>{{scope.row.address}}</span>
-            <span class="see_dil" v-show="scope.row.isshow">查看</span>
+            <span class="see_dil" @click="see_detailed(1)" v-show="scope.row.isshow">查看</span>
           </template>
         </el-table-column>
       </el-table>
@@ -106,11 +147,26 @@
     name: "index",
     data() {
       return {
+        historical_details: false,
         currentPage: 1,
         pagesize: 10,
         totla: 0,
+        currentPage_1: 1,
+        pagesize_1: 10,
+        totla_1: 0,
         searchphone: '',
         tableData: [
+          {"address": '566', "isshow": 'false'},
+          {"address": '566', "isshow": 'true'},
+          {"address": '566', "isshow": 'false'},
+          {"address": '566', "isshow": 'true'},
+          {"address": '566', "isshow": 'true'},
+          {"address": '566', "isshow": 'false'},
+          {"address": '566', "isshow": 'true'},
+          {"address": '566', "isshow": 'true'},
+
+        ],
+        historical_data: [
           {"address": '566', "isshow": 'false'},
           {"address": '566', "isshow": 'true'},
           {"address": '566', "isshow": 'false'},
@@ -135,9 +191,30 @@
           {'typeName': '金牌节点', 'typeId': 4},
           {'typeName': '银牌节点', 'typeId': 5},
           {'typeName': '普通矿工', 'typeId': 6},
-        ]
+        ],
+        search_value:''
       }
-    }, methods: {
+    },
+    methods: {
+      /*获取数据公共方法*/
+      getdata(e,q) {
+        // getPersonInfo(e).then(response => {
+        //   if (response.data.dataList == []) {
+        //     this.tableData = []
+        //   } else {
+        //     this.tableData = response.data.dataList
+        //     this.totla = response.data.total
+        //     if(q==1){
+        //       this.search_value= this.searchphone
+        //     }
+        //   }
+        // })
+      },
+      /*初始化数据*/
+      initialization_data() {
+        // let data = {"phone": "", "address": "", "page": 1, "pageSize": 10}
+        // this.getdata(data,0)
+      },
       /*通过交易所进行筛选*/
       select_exchange() {
         console.log(1)
@@ -155,9 +232,33 @@
       select_level() {
 
       },
+      /*表格分页*/
       currentPageChange(e) {
 
       },
+      /*查看单条收益详细*/
+      see_detailed(e) {
+        this.historical_details = true
+      },
+      /*详细分页*/
+      change_currentPage_1() {
+
+      },
+      /*是否绑定手机*/
+      is_phone(e) {
+        let istrue = ''
+        if (e == 0) {
+          istrue = '否'
+        } else if (e == 1) {
+          istrue = '是'
+        } else {
+          istrue = ''
+        }
+        return istrue
+      }
+    },
+    created(){
+      this.initialization_data()
     }
   }
 </script>
@@ -168,6 +269,11 @@
   }
 </style>
 <style scoped>
+
+  .block {
+    padding-bottom: 60px;
+  }
+
   .see_dil {
     cursor: pointer;
     color: #800080;
