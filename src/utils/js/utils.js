@@ -44,21 +44,21 @@ export default {
     Vue.prototype.nodeLevelConversion = function (e) {
       let node = ''
       if (e == '' || e == undefined || e == null) {
-        node = '未知节点'
+        node = ''
       } else {
         if (e == 0) {
           node = '源节点'
         } else if (e == 1) {
-          node = '源节点'
+          node = '超级节点'
         }
         else if (e == 2) {
-          node = '源节点'
+          node = '金牌节点'
         }
         else if (e == 3) {
-          node = '源节点'
+          node = '银牌节点'
         }
         else if (e == 4) {
-          node = '源节点'
+          node = '普通节点'
         }
       }
 

@@ -75,49 +75,49 @@
             label="申请时间"
             align="center">
             <template slot-scope="scope">
-              <span>{{scope.row.address}}</span>
+              <span>{{timestampToTime(scope.row.applytime)}}</span>
             </template>
           </el-table-column>
           <el-table-column
             label="节点地址"
             align="center">
             <template slot-scope="scope">
-              <span>{{scope.row.address}}</span>
+              <span>{{scope.row.nodeaddr}}</span>
             </template>
           </el-table-column>
           <el-table-column
             label="绑定手机"
             align="center">
             <template slot-scope="scope">
-              <span>{{scope.row.address}}</span>
+              <span>{{scope.row.bindphone}}</span>
             </template>
           </el-table-column>
           <el-table-column
             label="未锁定总量"
             align="center">
             <template slot-scope="scope">
-              <span>{{scope.row.address}}</span>
+              <span>{{scope.row.notlocktotal}}</span>
             </template>
           </el-table-column>
           <el-table-column
             label="锁定总量"
             align="center">
             <template slot-scope="scope">
-              <span>{{scope.row.address}}</span>
+              <span>{{scope.row.locktotal}}</span>
             </template>
           </el-table-column>
           <el-table-column
             label="当前级别"
             align="center">
             <template slot-scope="scope">
-              <span>{{scope.row.address}}</span>
+              <span>{{nodeLevelConversion(scope.row.curlevel)}}</span>
             </template>
           </el-table-column>
           <el-table-column
             label="申请级别"
             align="center">
             <template slot-scope="scope">
-              <span>{{scope.row.address}}</span>
+              <span>{{nodeLevelConversion(scope.row.applylevel)}}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -125,8 +125,8 @@
             align="center">
             <template slot-scope="scope">
               <div class="part_1_operating">
-                <span @click="application_approved()">通过申请</span>
-                <span @click="reject_application()">驳回申请</span>
+                <span @click="application_reject_approved(1,scope.row.bindphone,scope.row.applytime)">通过申请</span>
+                <span @click="application_reject_approved(0,scope.row.bindphone,scope.row.applytime)">驳回申请</span>
               </div>
             </template>
           </el-table-column>
@@ -166,42 +166,42 @@
             label="申请时间"
             align="center">
             <template slot-scope="scope">
-              <span>{{scope.row.address}}</span>
+              <span>{{timestampToTime(scope.row.applytime)}}</span>
             </template>
           </el-table-column>
           <el-table-column
             label="节点地址"
             align="center">
             <template slot-scope="scope">
-              <span>{{scope.row.address}}</span>
+              <span>{{scope.row.nodeaddr}}</span>
             </template>
           </el-table-column>
           <el-table-column
             label="绑定手机"
             align="center">
             <template slot-scope="scope">
-              <span>{{scope.row.address}}</span>
+              <span>{{scope.row.bindphone}}</span>
             </template>
           </el-table-column>
           <el-table-column
             label="申请前级别"
             align="center">
             <template slot-scope="scope">
-              <span>{{scope.row.address}}</span>
+              <span>{{nodeLevelConversion(scope.row.curlevel)}}</span>
             </template>
           </el-table-column>
           <el-table-column
             label="申请级别"
             align="center">
             <template slot-scope="scope">
-              <span>{{scope.row.address}}</span>
+              <span>{{nodeLevelConversion(scope.row.applylevel)}}</span>
             </template>
           </el-table-column>
           <el-table-column
             label="申请状态"
             align="center">
             <template slot-scope="scope">
-              <span>{{scope.row.address}}</span>
+              <span>{{is_applystate(scope.row.applystate)}}</span>
             </template>
           </el-table-column>
         </el-table>
@@ -464,14 +464,16 @@
 </template>
 
 <script>
+  import {upgradeapproval,approvalexe,upgradehistory} from '../api/interface'
+
   export default {
     name: "nodeUpgrade",
     data() {
       return {
-        selecte_node_value:0,
-        node_address:'',
-        dialogVisible:false,
-        dialogVisible_1:false,
+        selecte_node_value: 0,
+        node_address: '',
+        dialogVisible: false,
+        dialogVisible_1: false,
         isactive: 0,
         item_active: 'item_active',
         item_default: 'item_default',
@@ -489,7 +491,7 @@
           {"name": ' 解锁历史 '},
           {"name": ' 人工预置 '},
         ],
-        options:[
+        options: [
           {
             value: 0,
             label: '普通矿工'
@@ -511,17 +513,7 @@
         searchphone_2: '',
         searchphone_3: '',
         searchphone_4: '',
-        tableData_1: [
-          {"address": '566', "isshow": 'false'},
-          {"address": '566', "isshow": 'true'},
-          {"address": '566', "isshow": 'false'},
-          {"address": '566', "isshow": 'true'},
-          {"address": '566', "isshow": 'true'},
-          {"address": '566', "isshow": 'false'},
-          {"address": '566', "isshow": 'true'},
-          {"address": '566', "isshow": 'true'},
-
-        ],
+        tableData_1: [],
         tableData_2: [
           {"address": '566', "isshow": 'false'},
           {"address": '566', "isshow": 'true'},
@@ -582,13 +574,21 @@
         pagesize_5: 10,
         totla_5: 0,
         multipleSelection: [],
+        search_value: '',
+        search_value_2: ''
       }
     }, methods: {
       /*table切换*/
       swich_tab(e) {
         if (e == 0) {
+          this.initialization_data()
+        } else if (e == 1) {
+          this.initialization_data_2()
+        } else if (e == 2) {
 
-        } else {
+        } else if (e == 3) {
+
+        } else if (e == 4) {
 
         }
         this.isactive = e
@@ -600,42 +600,132 @@
           }
         })
       },
+
+      /*part_1 初始化数据公共方法*/
+      getdata(e, q) {
+        upgradeapproval(e).then(response => {
+          if (response.data.dataList == []) {
+            this.tableData_1 = []
+          } else {
+            this.tableData_1 = response.data.dataList
+            this.totla_1 = response.data.total
+            if (q == 1) {
+              this.search_value = this.searchphone_1
+            } else {
+              this.search_value = ''
+            }
+          }
+        })
+      },
+      /*part_1 初始化数据*/
+      initialization_data() {
+        this.currentPage_1=1
+        this.searchphone_1=''
+        let data = {"pagesize": 10, "page": 1, "phone": ""}
+        this.getdata(data, 0)
+      },
       /*part_1 通过手机号进行筛选*/
       search_phone_1() {
-        if (this.search_phone == '') {
-
+        this.currentPage_1 = 1
+        if (this.searchphone_1 == '') {
+          let data = {"pagesize": 10, "page": this.currentPage_1, "phone": ""}
+          this.getdata(data, 0)
         } else {
-
+          let data = {"pagesize": 10, "page": this.currentPage_1, "phone": this.searchphone_1}
+          this.getdata(data, 1)
         }
 
       },
       /*part_1 分页查询*/
       currentPageChange_1(e) {
-
+        this.currentPage_1 = e
+        let data = {"pagesize": 10, "page": this.currentPage_1, "phone": this.search_value}
+        this.getdata(data, 0)
       },
-      /*part_1 同意申请*/
-      application_approved(){
-
+      /*part_1 同意,驳回申请*/
+      application_reject_approved(q, phone,time) {
+        let data={"phone":phone,"n":q.toString(),"applytime":time}
+        approvalexe(data).then(response=>{
+          if(response.eCode==200){
+            this.$message({
+              message: '操作成功！',
+              type: 'success'
+            });
+            if(this.currentPage_1==1){
+              this.currentPageChange_1(this.currentPage_1)
+            }else{
+              if(this.tableData_1.length==1){
+                this.currentPage_1=this.currentPage_1-1
+                this.currentPageChange_1(this.currentPage_1)
+              }else {
+                this.currentPageChange_1(this.currentPage_1)
+              }
+            }
+          }else {
+            this.$message({
+              message: '操作失败，请稍后重试！',
+              type: 'error'
+            });
+          }
+        })
       },
-      /*part_1 驳回申请*/
-      reject_application(){
 
+      /*======================================*/
+      getdata_history(e, q) {
+        upgradehistory(e).then(response => {
+          if (response.data.dataList == []) {
+            this.tableData_2 = []
+          } else {
+            this.tableData_2 = response.data.dataList
+            this.totla_2 = response.data.total
+            if (q == 1) {
+              this.search_value_2 = this.searchphone_2
+            } else {
+              this.search_value_2 = ''
+            }
+          }
+        })
       },
-
-      /*-------------------------*/
+      initialization_data_2() {
+        this.currentPage_2=1
+        this.searchphone_2=''
+        let data = {"pagesize": 10, "page": 1, "phone": ""}
+        this.getdata_history(data, 0)
+      },
       /*part_2 通过手机号进行筛选*/
       search_phone_2() {
-        if (this.search_phone == '') {
-
+        this.currentPage_2 = 1
+        if (this.searchphone_2 == '') {
+          let data = {"pagesize": 10, "page": this.currentPage_2, "phone": ""}
+          this.getdata_history(data, 0)
         } else {
-
+          let data = {"pagesize": 10, "page": this.currentPage_2, "phone": this.searchphone_2}
+          this.getdata_history(data, 1)
         }
-
       },
       /*part_2 分页查询*/
       currentPageChange_2(e) {
-
+        this.currentPage_2 = e
+        let data = {"pagesize": 10, "page": this.currentPage_2, "phone": this.search_value_2}
+        this.getdata_history(data, 0)
       },
+      /*申请状态公共方法*/
+      is_applystate(e){
+        let a=''
+        if(e==0){
+          a='驳回申请'
+        }else if(e==1){
+          a='通过申请'
+        }else if(e==2) {
+          a='审核中'
+        }else {
+          a=''
+        }
+        return a
+      },
+
+      /*======================================*/
+
       toggleSelection(rows) {
         if (rows) {
           rows.forEach(row => {
@@ -648,9 +738,6 @@
       handleSelectionChange(val) {
         this.multipleSelection = val;
       },
-
-
-      /*-------------------------*/
       /*part_3 通过手机号进行筛选*/
       search_phone_3() {
         if (this.search_phone == '') {
@@ -674,7 +761,7 @@
       },
 
 
-      /*-------------------------*/
+      /*======================================*/
       /*part_4 通过手机号进行筛选*/
       search_phone_4() {
         if (this.search_phone_4 == '') {
@@ -690,7 +777,7 @@
       },
 
 
-      /*-------------------------*/
+      /*======================================*/
       /*part_5 通过手机号进行筛选*/
       search_phone_5() {
         if (this.search_phone_5 == '') {
@@ -705,35 +792,38 @@
 
       },
       /*part_5 打开节点设置弹框*/
-      node_settings(){
-        this.dialogVisible=true
+      node_settings() {
+        this.dialogVisible = true
       },
       /*part_5 一级弹窗确认地址*/
-      dialog_sure(){
-        this.dialogVisible_1=true
-        if(this.node_address==''){
+      dialog_sure() {
+        this.dialogVisible_1 = true
+        if (this.node_address == '') {
           this.$message({
             message: '请输入正确节点地址！',
             type: 'error'
           });
-        }else {
+        } else {
 
         }
       },
       /*part_5 一级弹窗取消*/
-      dialog_cancel(){
-        this.node_address==''
-        this.dialogVisible=false
+      dialog_cancel() {
+        this.node_address == ''
+        this.dialogVisible = false
       },
       /*part_5 一级弹窗确认地址*/
-      dialog_sure_1(){
+      dialog_sure_1() {
         // this.selecte_node_value
       },
       /*part_5 二级弹窗取消*/
-      dialog_cancel_1(){
-        this.dialogVisible_1=false
-        this.selecte_node_value=0
+      dialog_cancel_1() {
+        this.dialogVisible_1 = false
+        this.selecte_node_value = 0
       }
+    },
+    created() {
+      this.initialization_data()
     }
   }
 </script>
@@ -744,12 +834,13 @@
   }
 </style>
 <style scoped>
-  .dia_left{
+  .dia_left {
     display: inline-block;
     width: 100px;
     text-align: right;
     margin-right: 20px;
   }
+
   .pass_all {
     float: right;
     position: relative;
