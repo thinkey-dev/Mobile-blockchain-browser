@@ -12,7 +12,7 @@
         {{$t('title.address_de')}}
       </div>
       <div class="con_title" style="margin-top: 3rem;border-bottom: 1px solid #C8C8C8;padding-bottom: 3rem">
-        <span style="color: #82848a;word-break: break-all">{{get_data.address}}</span>
+        <span style="color: #82848a;word-break: break-all">{{slice_address1(get_data.address)}}</span>
       </div>
       <div class="con_title" style="margin-top: 3rem;font-size: 3rem">
         {{$t('table.transfer_amount')}} <span style="color: #82848a;float: right">{{scientificCounting(account_data.balances)}} <span>TUE</span></span>
@@ -53,28 +53,22 @@
           <span>{{timestampToTime(scope.row.timestamp)}}</span>
         </template>
       </el-table-column>
-      <!--<el-table-column-->
-        <!--:label="$t('table.transaction_type')"-->
-        <!--align="center">-->
-        <!--<template slot-scope="scope">-->
-          <!--<span v-show="is_zh">{{tr_change_zh(scope.row.txType)}}</span>-->
-          <!--<span v-show="!is_zh">{{tr_change_en(scope.row.txType)}}</span>-->
-        <!--</template>-->
-      <!--</el-table-column>-->
       <el-table-column
         :label="$t('table.initiator')"
         align="center">
         <template slot-scope="scope">
-          <span :class="is_click(scope.row.txType,scope.row.from)"
-                @click="view_initiator(scope.row.chainId,scope.row.from,scope.row.txType)">{{slice_hash(scope.row.from)}}</span>
+          <!--<span :class="is_click(scope.row.txType,scope.row.from)"-->
+                <!--@click="view_initiator(scope.row.chainId,scope.row.from,scope.row.txType)">{{slice_address(scope.row.from)}}</span>   -->
+          <span>{{slice_address(scope.row.from)}}</span>
         </template>
       </el-table-column>
       <el-table-column
         :label="$t('table.receiver')"
         align="center">
         <template slot-scope="scope">
-          <span :class="is_click_1(scope.row.txType,scope.row.to)"
-                @click="view_recipient(scope.row.chainId,scope.row.to,scope.row.txType)">{{slice_hash(scope.row.to)}}</span>
+          <!--<span :class="is_click_1(scope.row.txType,scope.row.to)"-->
+                <!--@click="view_recipient(scope.row.chainId,scope.row.to,scope.row.txType)">{{slice_address(scope.row.to)}}</span>     -->
+          <span>{{slice_address(scope.row.to)}}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -135,11 +129,9 @@
       }
     },
     methods: {
-      /*返回上一级界面*/
       go_back(){
         this.$router.go(-1)
       },
-      /*chainid_转换中文*/
       chainid_change_zh(e) {
         let a = ''
         this.chain_list.zh_chain_arr.forEach((item, index) => {
@@ -149,7 +141,6 @@
         })
         return a
       },
-      /*chainid_转换英文*/
       chainid_change_en(e) {
         let a = ''
         this.chain_list.en_chain_arr.forEach((item, index) => {
@@ -159,7 +150,6 @@
         })
         return a
       },
-      /*交易类型转换中文*/
       tr_change_zh(e) {
         let a = ''
         this.tr_zh.forEach((item, index) => {
@@ -169,7 +159,6 @@
         })
         return a
       },
-      /*交易类型转换英文*/
       tr_change_en(e) {
         let a = ''
         this.tr_en.forEach((item, index) => {
@@ -194,7 +183,6 @@
           this.totla = response.data.transactionsList.total
         })
       },
-      /*获取金额详情*/
       getAccountByAddress() {
         let data = {"chainId": this.get_data.chainId.toString(), "address": this.get_data.address}
         getAccountByAddress(data).then(response => {
@@ -202,7 +190,6 @@
           this.account_data = response.data
         })
       },
-      /*获取交易详情*/
       getBlockTxByAddress() {
         this.loading = true
         let data = {
@@ -217,7 +204,6 @@
           this.totla = response.data.transactionsList.total
         })
       },
-      /*查看发起方详细*/
       view_initiator(e, q, w) {
         if (w == 1) {
         } else if (q == this.get_data.address) {
@@ -245,7 +231,6 @@
         }
 
       },
-      /*查看接收方详细*/
       view_recipient(e, q, w) {
         if (w == 1) {
         }
@@ -315,7 +300,6 @@
         }
         return a
       },
-      /*点击交易信息=>交易hash=>到达几种交易详情*/
       see_trfor_hash(id, type, hash) {
         let data = {
           'page': 1,
@@ -323,37 +307,31 @@
           'hash': hash,
           'pagesize': 5,
         }
-        /*链内交易√*/
         if (type == 3) {
           this.$store.dispatch('app/setSearchTr1', data).then(() => {
             this.$router.push({path: '/intrachain_transfer'})
           })
         }
-        /*合约交易*/
         else if (type == 2) {
           this.$store.dispatch('app/setSearchTr3', data).then(() => {
             this.$router.push({path: '/contract_transaction'})
           })
         }
-        /*合约发布*/
         else if (type == 1) {
           this.$store.dispatch('app/setSearchTr4', data).then(() => {
             this.$router.push({path: '/contract_release'})
           })
         }
-        /*跨链转账取款√*/
         else if (type == 4) {
           this.$store.dispatch('app/setSearchTr2', data).then(() => {
             this.$router.push({path: '/transfer_withdrawal'})
           })
         }
-        /*跨链转账存款√*/
         else if (type == 5) {
           this.$store.dispatch('app/setSearchTr5', data).then(() => {
             this.$router.push({path: '/transfer_deposit'})
           })
         }
-        /*跨链转账撤销√*/
         else if (type == 6) {
           this.$store.dispatch('app/setSearchTr6', data).then(() => {
             this.$router.push({path: '/transfer_cancellation'})

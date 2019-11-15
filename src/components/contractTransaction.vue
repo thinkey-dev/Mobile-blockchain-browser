@@ -71,7 +71,7 @@
             {{$t('table.is_user')}}
           </div>
           <div class="cta_all_con_right  "style="border-bottom: 1px solid #DCDFE6;padding-bottom: 1rem;margin-bottom: 3rem" >
-            {{all_data.from}}
+            {{slice_address1(all_data.from)}}
           </div>
         </div>
         <div class="cta_all_con">
@@ -146,11 +146,9 @@
       }
     },
     methods: {
-      /*返回上一级界面*/
       go_back() {
         this.$router.go(-1)
       },
-      /* 获取当前页数据*/
       retrieve_data() {
         let data = this.$store.getters.home_search_tr_3
         getBlockNewTxPage(data).then(response => {
@@ -158,7 +156,6 @@
         })
 
       },
-      /*交易类型转换中文*/
       tr_change_zh(e) {
         let a = ''
         this.tr_zh.forEach((item, index) => {
@@ -168,7 +165,6 @@
         })
         return a
       },
-      /*交易类型转换英文*/
       tr_change_en(e) {
         let a = ''
         this.tr_en.forEach((item, index) => {
@@ -178,7 +174,6 @@
         })
         return a
       },
-      /*chainid_转换中文*/
       chainid_change_zh(e) {
         let a = ''
         this.chain_list.zh_chain_arr.forEach((item, index) => {
@@ -188,7 +183,6 @@
         })
         return a
       },
-      /*chainid_转换英文*/
       chainid_change_en(e) {
         let a = ''
         this.chain_list.en_chain_arr.forEach((item, index) => {
@@ -198,7 +192,6 @@
         })
         return a
       },
-      /*查看区块详情*/
       to_block_details(e, q) {
         let data = {
           "height": e.toString(),
@@ -212,14 +205,12 @@
         })
 
       },
-      /*点击转账人跳转到地址详情*/
       to_address_details(id, address) {
         let data = {"chainId": id, "address": address}
         this.$store.dispatch('app/setAddressDetails', data).then(() => {
           this.$router.push({path: '/address_details'})
         })
       },
-      /*点击合约跳转到合约详情*/
       to_contract_details(e, q) {
         let data = {"chainId": e.toString(), "contract": q, "page": 1, "pagesize": 10}
         this.$store.dispatch('app/setContractDetails', data).then(() => {

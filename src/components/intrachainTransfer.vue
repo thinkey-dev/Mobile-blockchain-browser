@@ -18,7 +18,8 @@
           <div class="it_all_con_left" style="">
             {{$t('table.transaction_hash')}}
           </div>
-          <div class="it_all_con_right" style="border-bottom: 1px solid #DCDFE6;padding-bottom: 1rem;margin-bottom: 3rem">
+          <div class="it_all_con_right"
+               style="border-bottom: 1px solid #DCDFE6;padding-bottom: 1rem;margin-bottom: 3rem">
             {{all_data.hash}}
           </div>
         </div>
@@ -39,7 +40,8 @@
           <div class="it_all_con_left">
             {{$t('table.ov_block')}}
           </div>
-          <div class="it_all_con_right  " style="border-bottom: 1px solid #DCDFE6;padding-bottom: 1rem;margin-bottom: 3rem">
+          <div class="it_all_con_right  "
+               style="border-bottom: 1px solid #DCDFE6;padding-bottom: 1rem;margin-bottom: 3rem">
                   <span class="to_tr color_choose"
                         v-show="is_zh">{{chainid_change_zh(all_data.chainId)+' > '+all_data.height}}</span>
             <span class="to_tr color_choose"
@@ -69,17 +71,19 @@
           <div class="it_all_con_left ">
             {{$t('table.issuer')}}
           </div>
-          <div class="it_all_con_right  " style="border-bottom: 1px solid #DCDFE6;padding-bottom: 1rem;margin-bottom: 3rem" >
-            {{all_data.from}}
+          <div class="it_all_con_right  "
+               style="border-bottom: 1px solid #DCDFE6;padding-bottom: 1rem;margin-bottom: 3rem">
+            {{slice_address1(all_data.from)}}
           </div>
         </div>
         <div class="it_all_con">
           <div class="it_all_con_left ">
             {{$t('table.recipient')}}
           </div>
-          <div class="it_all_con_right  " style="border-bottom: 1px solid #DCDFE6;padding-bottom: 1rem;margin-bottom: 3rem">
+          <div class="it_all_con_right  "
+               style="border-bottom: 1px solid #DCDFE6;padding-bottom: 1rem;margin-bottom: 3rem">
           <span s
-                @click="to_address_details(all_data.chainId,all_data.to)">{{all_data.to}}</span>
+                @click="to_address_details(all_data.chainId,all_data.to)">{{slice_address1(all_data.to)}}</span>
           </div>
         </div>
         <div class="it_all_con" style="display: flex;justify-content: space-between">
@@ -124,7 +128,7 @@
       return {
         is_success: true,
         all_data: {
-          'height':''
+          'height': ''
         },
         is_zh: true,
         tr_zh: [
@@ -147,11 +151,9 @@
       }
     },
     methods: {
-      /*返回上一级界面*/
       go_back() {
         this.$router.go(-1)
       },
-      /* 获取当前页数据*/
       initialization_data() {
         // this.all_data=''
         let data = this.$store.getters.home_search_tr_1
@@ -160,7 +162,6 @@
         })
 
       },
-      /*交易类型转换中文*/
       tr_change_zh(e) {
         let a = ''
         this.tr_zh.forEach((item, index) => {
@@ -170,7 +171,6 @@
         })
         return a
       },
-      /*交易类型转换英文*/
       tr_change_en(e) {
         let a = ''
         this.tr_en.forEach((item, index) => {
@@ -180,7 +180,6 @@
         })
         return a
       },
-      /*chainid_转换中文*/
       chainid_change_zh(e) {
         let a = ''
         this.chain_list.zh_chain_arr.forEach((item, index) => {
@@ -190,7 +189,6 @@
         })
         return a
       },
-      /*chainid_转换英文*/
       chainid_change_en(e) {
         let a = ''
         this.chain_list.en_chain_arr.forEach((item, index) => {
@@ -200,7 +198,6 @@
         })
         return a
       },
-      /*查看全部区块*/
       to_all_blocks(e, q) {
         let data = {
           "height": e.toString(),
@@ -213,7 +210,6 @@
           this.$router.push({path: '/slicechain_blockdetails'})
         })
       },
-      /*点击转账人跳转到地址详情*/
       to_address_details(id, address) {
         let data = {"chainId": id, "address": address}
         this.$store.dispatch('app/setAddressDetails', data).then(() => {
@@ -261,9 +257,9 @@
   }
 
   .sbh_header {
-    display:flex;
-    justify-content:center;
-    align-items:center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     text-align: center;
     font-size: 3rem;
     width: 100%;
@@ -271,7 +267,7 @@
     top: 0;
     position: fixed;
     left: 0;
-    height:8%;
+    height: 8%;
     background-color: #FFFFFF;
     /*margin-bottom: 5rem;*/
   }
@@ -335,11 +331,13 @@
     border-radius: 5px;
     background: #ffffff;
   }
-.it_all_con_right_last{
-  max-height: 200px;
-  padding: 1rem;
-  overflow: auto;
-}
+
+  .it_all_con_right_last {
+    max-height: 200px;
+    padding: 1rem;
+    overflow: auto;
+  }
+
   .it_all_con {
     /*display: flex;*/
     padding: 4rem 5% 0rem 5%;

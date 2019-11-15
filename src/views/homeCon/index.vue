@@ -412,24 +412,20 @@
       }
     },
     methods: {
-      /*跳转到pc浏览器*/
       go_link(){
         window.location.href='https://browser.thinkey.org/#/home'
       },
-      /*获取货币信息*/
       getMainPageInfo() {
         getMainPageInfo().then(response => {
           this.marke = response.data
           // this.drawing()
         })
       },
-      /*获取网络市值*/
       getTickers() {
         getNewTickers().then(response => {
           this.NewTickers_1 = response.data.priceInfo
         })
       },
-      /*获取主链信息*/
       getMainChainStat() {
         let data = {"chainId": '0'}
         getMainChainStat(data).then(response => {
@@ -438,7 +434,6 @@
 
         })
       },
-      /*获取主链分片链信息*/
       getChainStatByType() {
         this.loading = true
         getChainStatByType().then(response => {
@@ -453,7 +448,6 @@
           this.loading = false
         })
       },
-      /*获取交易信息*/
       getBlockNewTxPage() {
         this.loading1 = true
         let data = {
@@ -467,7 +461,6 @@
           this.loading1 = false
         })
       },
-      /*区块详情查询*/
       go_search_height() {
         if (this.search_height == '') {
           if (this.$store.getters.language == 'en') {
@@ -501,94 +494,62 @@
         }
 
       },
-      /* 区块详情hash或者账户地址查询*/
       go_search_tr() {
         if (this.search_transaction == '') {
           if (this.$store.getters.language == 'en') {
-            this.$message({
-              message: 'Query transaction details transaction hash/account address cannot be empty！',
-              type: 'error',
-              customClass: 'message_logout',
-            })
+            this.$message.error('Query transaction details transaction hash/account address cannot be empty!');
           } else {
-            this.$message({
-              message: '查询交易详情账户详情不能为空！',
-              type: 'error',
-              customClass: 'message_logout',
-            })
+            this.$message.error('查询交易详情账户详情不能为空！');
           }
 
         } else {
-          if (this.search_transaction.length == 42) {
-            // function getChainidNum(address, list){
-            //   let str = address.slice(0,4);
-            //   let bytestring = Number(str);
-            //   list.sort((ar1,ar2)=>{
-            //     return parseInt(ar1) - parseInt(ar2)
-            //   })
-            //   let ids = parseInt(list[0]);
-            //   let chainID = ids + (bytestring >> 7);
-            //   return chainID.toString();
-            // }
-            // let chain_s=getChainidNum(this.search_transaction,['3','4'])
-            let data = {"chainId": '', "address": this.search_transaction}
+
+          if (this.search_transaction.length == 35) {
+            let adress16=this.to_16_decimal(this.search_transaction)
+            let data = {"chainId": '', "address":adress16}
             this.$store.dispatch('app/setAddressDetails', data).then(() => {
               this.$router.push({path: '/address_details'})
             })
           } else {
             let data = {
               'page': 1,
-              'chainId': '',
+              'chainId': '1',
               'hash': this.search_transaction,
               'pagesize': 5,
             }
             getBlockNewTxPage(data).then(response => {
               if (response.data.transactionsList.dataList.length == 0) {
                 if (this.$store.getters.language == 'en') {
-                  this.$message({
-                    message: 'The current transaction details transaction hash/account address query result is empty, please check and enter again！',
-                    type: 'error',
-                    customClass: 'message_logout',
-                  })
+                  this.$message.error('The current transaction details transaction hash/account address query result is empty, please check and enter again!');
                 } else {
-                  this.$message({
-                    message: '当前交易详情账户详情查询结果为空，请检查后再次输入！',
-                    type: 'error',
-                    customClass: 'message_logout',
-                  })
+                  this.$message.error('当前交易详情账户详情查询结果为空，请检查后再次输入！');
                 }
               } else {
-                /*链内交易√*/
                 if (response.data.transactionsList.dataList[0].txType == 3) {
                   this.$store.dispatch('app/setSearchTr1', data).then(() => {
                     this.$router.push({path: '/intrachain_transfer'})
                   })
                 }
-                /*合约交易*/
                 else if (response.data.transactionsList.dataList[0].txType == 2) {
                   this.$store.dispatch('app/setSearchTr3', data).then(() => {
                     this.$router.push({path: '/contract_transaction'})
                   })
                 }
-                /*合约发布*/
                 else if (response.data.transactionsList.dataList[0].txType == 1) {
                   this.$store.dispatch('app/setSearchTr4', data).then(() => {
                     this.$router.push({path: '/contract_release'})
                   })
                 }
-                /*跨链转账取款√*/
                 else if (response.data.transactionsList.dataList[0].txType == 4) {
                   this.$store.dispatch('app/setSearchTr2', data).then(() => {
                     this.$router.push({path: '/transfer_withdrawal'})
                   })
                 }
-                /*跨链转账存款√*/
                 else if (response.data.transactionsList.dataList[0].txType == 5) {
                   this.$store.dispatch('app/setSearchTr5', data).then(() => {
                     this.$router.push({path: '/transfer_deposit'})
                   })
                 }
-                /*跨链转账撤销√*/
                 else if (response.data.transactionsList.dataList[0].txType == 6) {
                   this.$store.dispatch('app/setSearchTr6', data).then(() => {
                     this.$router.push({path: '/transfer_cancellation'})
@@ -600,13 +561,11 @@
 
         }
       },
-      /*只能输入数字*/
       handinput() {
         if (/[^\d]/.test(this.search_height)) {
           this.search_height = this.search_height.replace(/[^\d]/g, '');
         }
       },
-      /*chainid_转换中文*/
       chainid_change_zh(e) {
         let a = ''
         this.chain_list.zh_chain_arr.forEach((item, index) => {
@@ -616,7 +575,6 @@
         })
         return a
       },
-      /*chainid_转换英文*/
       chainid_change_en(e) {
         let a = ''
         this.chain_list.en_chain_arr.forEach((item, index) => {
@@ -626,7 +584,6 @@
         })
         return a
       },
-      /*交易类型转换中文*/
       tr_change_zh(e) {
         let a = ''
         this.tr_zh.forEach((item, index) => {
@@ -636,7 +593,6 @@
         })
         return a
       },
-      /*交易类型转换英文*/
       tr_change_en(e) {
         let a = ''
         this.tr_en.forEach((item, index) => {
@@ -646,11 +602,9 @@
         })
         return a
       },
-      /*点击主链跳转到主链页面*/
       to_main_chain_interface() {
         this.$router.push({path: '/main_chain'})
       },
-      /*点击主链区块高度跳转*/
       click_main_height(e) {
         let data = {
           "height": e.toString(),
@@ -663,7 +617,6 @@
           this.$router.push({path: '/mainchain_blockdetails'})
         })
       },
-      /*点击已分片子链/未分片子链高度跳转*/
       click_slice_height(e, q, w) {
         if (e == 0) {
           let data = {
@@ -689,7 +642,6 @@
         }
 
       },
-      /*查看主链委员会*/
       to_main_chaincommittee(e, q) {
         if (e == 0) {
           let data = {"chainId": '0', "epoch": ''}
@@ -704,28 +656,24 @@
         }
 
       },
-      /*查看未分片链委员会*/
       to_Unfragmented_chaincommittee(e) {
         let data = {"chainId": e.toString(), "epoch": ''}
         this.$store.dispatch('app/setUnmainChaincommittee', data).then(() => {
           this.$router.push({path: '/fragmentchain_committee'})
         })
       },
-      /*点击已分片子链进入已分片子链界面*/
       to_subchain_interface(e) {
         let data = {"chainId": e.toString()}
         this.$store.dispatch('app/setFragmentedDetails', data).then(() => {
           this.$router.push({path: '/split_subchain'})
         })
       },
-      /*点击未分片子链进入未分片界面*/
       to_unfragmented_interface(e) {
         let data = {"chainId": e.toString()}
         this.$store.dispatch('app/setUnfragmentedDetails', data).then(() => {
           this.$router.push({path: '/unfragmented_subchain'})
         })
       },
-      /*点击交易信息地址查看交易详情*/
       to_address_interface(peo, id, address, type) {
         if (peo == 0) {
           let data = {"chainId": id.toString(), "address": address}
@@ -754,7 +702,6 @@
         }
 
       },
-      /*查看更多交易信息*/
       to_transaction_information() {
         let data = {
           "chainId": "",
@@ -766,7 +713,6 @@
           this.$router.push({path: '/trading_information'})
         })
       },
-      /*点击交易信息=>交易hash=>到达几种交易详情*/
       see_transaction_information(id, type, hash) {
         let data = {
           'page': 1,
@@ -774,37 +720,31 @@
           'hash': hash,
           'pagesize': 5,
         }
-        /*链内交易√*/
         if (type == 3) {
           this.$store.dispatch('app/setSearchTr1', data).then(() => {
             this.$router.push({path: '/intrachain_transfer'})
           })
         }
-        /*合约交易*/
         else if (type == 2) {
           this.$store.dispatch('app/setSearchTr3', data).then(() => {
             this.$router.push({path: '/contract_transaction'})
           })
         }
-        /*合约发布*/
         else if (type == 1) {
           this.$store.dispatch('app/setSearchTr4', data).then(() => {
             this.$router.push({path: '/contract_release'})
           })
         }
-        /*跨链转账取款√*/
         else if (type == 4) {
           this.$store.dispatch('app/setSearchTr2', data).then(() => {
             this.$router.push({path: '/transfer_withdrawal'})
           })
         }
-        /*跨链转账存款√*/
         else if (type == 5) {
           this.$store.dispatch('app/setSearchTr5', data).then(() => {
             this.$router.push({path: '/transfer_deposit'})
           })
         }
-        /*跨链转账撤销√*/
         else if (type == 6) {
           this.$store.dispatch('app/setSearchTr6', data).then(() => {
             this.$router.push({path: '/transfer_cancellation'})
@@ -824,13 +764,11 @@
       //     // _this.getTickers()
       //   }, 10000)
       // },
-      /*获取链相关信息*/
       chain_related_quantity() {
         getMainPageChainInfo().then(response => {
           this.chain_info = response.data
         })
       },
-      /*获取链市值，交易量，tps相关信息*/
       chain_market_related() {
         getMainPageTxByDay().then(response => {
           this.chain_market_info[0] = []
