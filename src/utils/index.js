@@ -126,6 +126,17 @@ export default {
         return c
       }
     }
+    // Vue.prototype.slice_address = function (e) {
+    //   if (e == '' || e == null || e == undefined) {
+    //     return ''
+    //   } else {
+    //     e=this.to_32_decimal(e)
+    //     let a = e.slice(0, 4)
+    //     let b = e.substring(e.length - 4)
+    //     let c = a + ' *** ' + b
+    //     return c
+    //   }
+    // }
     Vue.prototype.slice_address1 = function (e) {
       if (e == '' || e == null || e == undefined) {
         return ''

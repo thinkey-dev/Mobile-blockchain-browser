@@ -78,17 +78,20 @@
             {{$t('table.transfer_amount')}}
           </div>
           <div class="cr_all_con_right">
-            {{scientificCounting(all_data.value)}} TUE
+            {{scientificCounting(all_data.value)}} TKM
           </div>
         </div>
-        <!--<div class="cr_all_con">-->
-        <!--<div class="cr_all_con_left">-->
-        <!--{{$t('table.transaction_fee')}}-->
-        <!--</div>-->
-        <!--<div class="cr_all_con_right ">-->
-        <!--{{scientificCounting(all_data.txCost)}} TUE-->
-        <!--</div>-->
-        <!--</div>-->
+        <div class="cr_all_con">
+        <div class="cr_all_con_left">
+        {{$t('table.transaction_fee')}}
+        </div>
+        <div class="cr_all_con_right ">
+        {{scientificCounting(all_data.txCost)}} TKM
+        </div>
+        </div>
+
+
+        
         <div class="cr_all_con">
           <div class="cr_all_con_left cr_all_con_left_last" style="line-height: 100px">
             {{$t('table.input_data')}}

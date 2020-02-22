@@ -55,14 +55,14 @@
         :label="$t('table.transfer_amount')"
         align="center">
         <template slot-scope="scope">
-          <span>{{scientificCounting(scope.row.value)}} TUE</span>
+          <span>{{scientificCounting(scope.row.value)}} TKM</span>
         </template>
       </el-table-column>
       <el-table-column
         :label="$t('table.transaction_fee')"
         align="center">
         <template slot-scope="scope">
-          <span>{{scientificCounting(scope.row.txCost)}} TUE</span>
+          <span>{{scientificCounting(scope.row.txCost)}} TKM</span>
         </template>
       </el-table-column>
     </el-table>

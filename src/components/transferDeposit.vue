@@ -67,7 +67,7 @@
           {{$t('title.amount')}}
         </div>
         <div class="ct_all_con_right">
-          {{scientificCounting(all_data.value)}} TUE
+          {{scientificCounting(all_data.value)}} TKM
         </div>
       </div>
       <div class="ct_all_con">
@@ -75,7 +75,7 @@
           {{$t('table.transaction_fee')}}
         </div>
         <div class="ct_all_con_right ">
-          {{scientificCounting(all_data.txCost)}} TUE
+          {{scientificCounting(all_data.txCost)}} TKM
         </div>
       </div>
       <div class="ct_all_con">

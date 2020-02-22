@@ -52,7 +52,7 @@
           <!--{{$t('title.mining_reward')}}-->
         <!--</div>-->
         <!--<div class="mcd_all_con_right">-->
-          <!--{{scientificCounting(all_data.minerReward)}} TUE-->
+          <!--{{scientificCounting(all_data.minerReward)}} TKM-->
         <!--</div>-->
       <!--</div>-->
       <div class="mcd_all_con">

@@ -342,7 +342,7 @@
         <!--:label="$t('table.transfer_amount')"-->
         <!--align="center">-->
         <!--<template slot-scope="scope">-->
-          <!--<span>{{scientificCounting(scope.row.value)}} TUE</span>-->
+          <!--<span>{{scientificCounting(scope.row.value)}} TKM</span>-->
         <!--</template>-->
       <!--</el-table-column>-->
       <!--&lt;!&ndash;<el-table-column&ndash;&gt;-->
@@ -513,7 +513,7 @@
           } else {
             let data = {
               'page': 1,
-              'chainId': '1',
+              'chainId': '',
               'hash': this.search_transaction,
               'pagesize': 5,
             }

@@ -15,7 +15,7 @@
         <span style="color: #82848a;word-break: break-all">{{slice_address1(get_data.address)}}</span>
       </div>
       <div class="con_title" style="margin-top: 3rem;font-size: 3rem">
-        {{$t('table.transfer_amount')}} <span style="color: #82848a;float: right">{{scientificCounting(account_data.balances)}} <span>TUE</span></span>
+        {{$t('table.transfer_amount')}} <span style="color: #82848a;float: right">{{scientificCounting(account_data.balances)}} <span>TKM</span></span>
       </div>
       <div class="con_title" style="margin-top: 3rem">
         {{$t('table.ac_any_other')}}
@@ -26,7 +26,7 @@
           <span class="to_tr" style="color: #82848a;"
                 v-show="!is_zh">{{chainid_change_en(item.chainId)}}</span>
 
-          <span style="color: #82848a;float: right;font-size: 3rem">{{item.balance==''?0:scientificCounting(item.balance)}} <span>TUE</span></span>
+          <span style="color: #82848a;float: right;font-size: 3rem">{{item.balance==''?0:scientificCounting(item.balance)}} <span>TKM</span></span>
         </div>
       </div>
     </div>
@@ -75,7 +75,14 @@
         :label="$t('table.transfer_amount')"
         align="center">
         <template slot-scope="scope">
-          <span class="to_tr ">{{scientificCounting(scope.row.value)}} TUE</span>
+          <span class="to_tr ">{{scientificCounting(scope.row.value)}} TKM</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        :label="$t('table.transaction_fee')"
+        align="center">
+        <template slot-scope="scope">
+          <span class="to_tr ">{{scientificCounting(scope.row.gasFee)}} TKM</span>
         </template>
       </el-table-column>
     </el-table>
