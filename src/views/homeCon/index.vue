@@ -413,7 +413,7 @@
     },
     methods: {
       go_link(){
-        window.location.href='https://browser.thinkey.org/#/home'
+        window.location.href='https://browser.thinkium.org/#/home'
       },
       getMainPageInfo() {
         getMainPageInfo().then(response => {
