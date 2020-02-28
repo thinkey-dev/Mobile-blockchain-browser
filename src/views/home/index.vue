@@ -10,11 +10,11 @@
 
 <script>
   import HeaderView from '../../components/globalHeader'
-  import FooterView from '../../components/globalFooter'
+  // import FooterView from '../../components/globalFooter'
 
   export default {
     name: 'home',
-    components: {HeaderView, FooterView,},
+    components: {HeaderView,},
     data() {
       return {}
     }
