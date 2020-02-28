@@ -371,7 +371,7 @@
     getNewTickers,
     getMainPageTxByDay
   } from '../../api/interface'
-  import echarts from 'echarts'
+  // import echarts from 'echarts'
 
   export default {
     name: "idnex",
@@ -1010,7 +1010,7 @@
   }
 
   .chain_part_item_img_6 {
-    background: url("../../assets/images/circle_bg.png") no-repeat;
+    /*background: url("../../assets/images/circle_bg.png") no-repeat;*/
     background-position: center center;
     position: relative;
     top: -4%;

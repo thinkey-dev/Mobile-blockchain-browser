@@ -85,7 +85,7 @@
     height: 50px;
     position: relative;
     top: 12px;
-    background: url("../assets/images/logo_2.png") no-repeat;
+    /*background: url("../assets/images/logo_2.png") no-repeat;*/
     background-size: 75%
   }
 
